@@ -1,0 +1,28 @@
+name = "«flt-regular-extended»"
+# Default to the aggregate proof module, not the `lean_lib` facet: building the library target
+# triggers Lake's whole-library import-aggregation, which spuriously reports "bad imports" because
+# the dependency packages' globs don't formally re-export every `CyclotomicNT.*`/`FltVandiver.*`
+# module we import (they still resolve fine via `LEAN_PATH`, and every module builds). `lake build`
+# then builds `FLTRegularPrimes`, which transitively pulls in all 34 per-prime proofs.
+defaultTargets = ["FLTRegularPrimes"]
+
+# Extends flt_regular to regular primes beyond 13 (Mathlib gives 3; flt-regular gives 7/11/13),
+# native_decide-free. The shared Bernoulli base AND the shared class-group core
+# (Herbrand/Vandiver/Stickelberger/Kummer) live in flt-cyclotomic-nt, which transitively
+# provides flt-regular + mathlib.
+[[require]]
+name = "«flt-cyclotomic-nt»"
+path = "../flt-cyclotomic-nt"
+
+[[lean_lib]]
+name = "FltRegularExtended"
+srcDir = "."
+globs = [
+  "Component1",
+  "PlusBridge",
+  "VandiverCocycle",
+  "FltOfBernoulli",
+  "RegularPrimes",
+  "FLTRegularPrimes",
+  "Reg.*",
+]
