@@ -40,24 +40,19 @@ regulars here, the 8 irregulars there).
 
 ## Build
 
-Standard Lake project (toolchain pinned in `lean-toolchain`). **Do not run a bare
-`lake build FLTRegularPrimes`**: Lake schedules the 47 independent per-prime modules
-concurrently, and several kernel `decide`s at once overrun RAM (the largest, near `q = 349`,
-peak ~73 GiB *each*). Force a **single decide at a time** with `LEAN_NUM_THREADS=1`, under a
-memory cap sized to your machine:
-
 ```bash
-# one module (one decide) resident at a time; set MemoryMax to your box
-systemd-run --scope -p MemoryMax=80G --user \
-  env LEAN_NUM_THREADS=1 lake build FLTRegularPrimes
+lake exe cache get
+lake build FLTRegularPrimes   # all 47 primes; or one, e.g. lake build Reg.Flt223
 ```
 
-The small primes fit in a few GiB (buildable on a laptop); the high primes need a big-memory
-machine — `q = 349` alone peaks ~73 GiB. (There is no `-j`/`--jobs` flag in this Lake — Lake
-schedules build jobs on Lean's task runtime, so `LEAN_NUM_THREADS` is the concurrency knob. `=1`
-serializes the modules; ≥2 risks OOM at the high primes, and an individual `decide` is
-single-threaded, so a higher value gains nothing on the bottleneck. To build a single prime,
-e.g. `lake build Reg.Flt349` — the heaviest.)
+Kernel `decide` memory climbs steeply with `q`: ~7 GiB at `q = 151`, ~19 GiB at `223`, up to ~73 GiB at
+`349` (measured on a `c4d-standard-64`); the frontier is compute time (`349` ≈ 15.5 min). A bare
+`lake build FLTRegularPrimes` builds all 47 **in parallel** and will OOM anything but a large box —
+serialize under a cap (`systemd-run --scope -p MemoryMax=… env LEAN_NUM_THREADS=1 lake build FLTRegularPrimes`)
+or just build the primes your machine handles (`lake build Reg.Flt<q>`) and skip the heavy tail. Your call.
+
+**Expected warnings.** `q ≥ 269` prints `exponent … exceeds the threshold 256, … not evaluated` — harmless
+(the `decide` does the proof); left in place to avoid recompiling the big primes.
 
 ## Dependencies
 
