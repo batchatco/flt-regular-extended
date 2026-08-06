@@ -1,0 +1,48 @@
+\blueprintfrontmatter
+
+\begin{abstract}
+\code{flt-regular-extended} certifies FLT for the \emph{regular} primes
+$17 \le q < 350$ by a cheap route: a kernel Bernoulli-numerator check discharges
+regularity, and \textsf{flt-regular} supplies FLT for regular primes. It reuses
+the shared Bernoulli/Herbrand base of \code{flt-cyclotomic-nt} (external leaves).
+\end{abstract}
+
+\section{The Bernoulli regular route}
+
+\begin{definition}[FLT for regular primes (external)]\label{ext:fltregular}
+  \leanok
+  \textsf{flt-regular}'s theorem: a regular prime satisfies FLT (via Kummer's
+  ideal-descent argument).
+\end{definition}
+
+\begin{definition}[Bernoulli / Herbrand base (external)]\label{ext:bernbase}
+  \leanok
+  The kernel Bernoulli check \code{not\_irregular\_of\_bModN} and Herbrand's
+  theorem, from \code{flt-cyclotomic-nt} --- the algebraic direction
+  ``Bernoulli-regularity $\Rightarrow p \nmid h$''.
+\end{definition}
+
+\begin{theorem}[Regularity check $\Rightarrow$ FLT]\label{thm:regcheck}
+  \lean{RegPrimes.flt_of_regCheck}
+  \leanok
+  \uses{ext:fltregular}
+  A prime passing the regularity check satisfies \code{FermatLastTheoremFor}, the
+  generic bridge instantiated per prime.
+\end{theorem}
+
+\begin{theorem}[Bernoulli-regularity $\Rightarrow$ FLT]\label{thm:bernoulli}
+  \lean{FltOfBernoulli.fermatLastTheoremFor_of_bernoulli}
+  \leanok
+  \uses{thm:regcheck, ext:bernbase}
+  If $p$ divides the numerator of none of $B_2,\dots,B_{p-3}$ (a kernel-\code{decide}d
+  test), then $p$ is regular and FLT holds for $p$.
+\end{theorem}
+
+\begin{theorem}[First regular prime past 100]\label{thm:flt107}
+  \lean{RegPrimes.flt_107}
+  \leanok
+  \uses{thm:bernoulli}
+  \code{FermatLastTheoremFor}~$107$, the first regular exponent above $100$. All
+  $47$ regular primes in $[17, 350)$ are proved by this same route (files
+  \code{Flt17.lean} \dots\ \code{Flt349.lean}).
+\end{theorem}
