@@ -1,0 +1,57 @@
+name: Build check (representative regular primes)
+
+# Zero-compiler-trust (kernel Bernoulli `decide`) FLT for the representative regular primes
+# 17 and 107, built from a clean clone. The larger regular primes (up to q=349) climb to
+# ~73 GiB, beyond a free runner. flt-regular-extended path-depends on ../flt-cyclotomic-nt
+# (-> ../flt-stickelberger); both are checked out under fam/. Needs the family public.
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: "buildcheck-${{ github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc \
+                      /usr/local/.ghcup /opt/hostedtoolcache/CodeQL \
+                      /usr/local/share/boost "${AGENT_TOOLSDIRECTORY:-}" || true
+          sudo docker image prune --all --force || true
+          df -h /
+
+      - name: Checkout flt-regular-extended (this repo)
+        uses: actions/checkout@v4
+        with:
+          path: fam/flt-regular-extended
+      - name: Checkout flt-cyclotomic-nt
+        uses: actions/checkout@v4
+        with: { repository: batchatco/flt-cyclotomic-nt, ref: afm-v1, path: fam/flt-cyclotomic-nt }
+      - name: Checkout flt-stickelberger
+        uses: actions/checkout@v4
+        with: { repository: batchatco/flt-stickelberger, ref: afm-v1, path: fam/flt-stickelberger }
+
+      - name: Install elan + Lean toolchain (no build)
+        uses: leanprover/lean-action@f807b338d95de7813c5c50d018f1c23c9b93b4ec # v1.2.0
+        with:
+          lake-package-directory: fam/flt-regular-extended
+          build: false
+          use-mathlib-cache: false
+          test: false
+          lint: false
+
+      - name: Fetch Mathlib cache + build the representative regular primes (17, 107)
+        working-directory: fam/flt-regular-extended
+        run: |
+          set -euo pipefail
+          ~/.elan/bin/lake exe cache get
+          ~/.elan/bin/lake build Reg.Flt17 Reg.Flt107

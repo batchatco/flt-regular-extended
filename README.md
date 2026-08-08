@@ -1,5 +1,7 @@
 # flt-regular-extended
 
+[![Build check](https://github.com/batchatco/flt-regular-extended/actions/workflows/build-check.yml/badge.svg)](https://github.com/batchatco/flt-regular-extended/actions/workflows/build-check.yml)
+
 Extends **`flt_regular`** (FLT for regular primes) to regular primes **beyond 13**,
 `native_decide`-free.
 
