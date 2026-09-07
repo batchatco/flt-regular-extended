@@ -41,10 +41,10 @@ jobs:
           path: fam/flt-regular-extended
       - name: Checkout flt-cyclotomic-nt
         uses: actions/checkout@v4
-        with: { repository: batchatco/flt-cyclotomic-nt, ref: afm-v1, path: fam/flt-cyclotomic-nt }
+        with: { repository: batchatco/flt-cyclotomic-nt, ref: afm-v2, path: fam/flt-cyclotomic-nt }
       - name: Checkout flt-stickelberger
         uses: actions/checkout@v4
-        with: { repository: batchatco/flt-stickelberger, ref: afm-v1, path: fam/flt-stickelberger }
+        with: { repository: batchatco/flt-stickelberger, ref: afm-v2, path: fam/flt-stickelberger }
 
       - name: Install elan + Lean toolchain (no build)
         uses: leanprover/lean-action@f807b338d95de7813c5c50d018f1c23c9b93b4ec # v1.2.0
