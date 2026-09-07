@@ -91,7 +91,17 @@ theorem not_dvd_classNumber_real (hp2 : p ≠ 2) (hζ : IsPrimitiveRoot ζ p)
 /-- **FLT for any regular prime, native_decide-free, via Kummer's criterion.** For an odd prime
     `p`, if `p` divides no numerator of `B₂, B₄, …, B_{p-3}` (i.e. `p` is regular), then
     `FermatLastTheoremFor p`. This is fully generic; a concrete prime only needs to discharge the
-    finite Bernoulli hypothesis `hB` (e.g. by kernel `decide`, as the `Reg/` modules do). -/
+    finite Bernoulli hypothesis `hB` (e.g. by kernel `decide`, as the `Reg/` modules do).
+
+    The hypothesis `hB` is consumed twice, in parallel, not as a chain through the minus part:
+    1. *Minus part.* If `p ∣ |A⁻|`, Herbrand/Stickelberger (`irregular_of_dvd_minusPart`)
+       produces an even `i ≤ p − 3` with `p ∣ num B_i`, contradicting `hB`; so `p ∤ |A⁻|`.
+    2. *Plus part.* `hB` makes every Step-C eigen-unit a non-`p`-th power
+       (`StepC.eigenFamily_ne_zero_of_not_dvd_bernoulli`), so Washington Thm 8.14
+       (`vandiver_aux`, via `not_dvd_classNumber_real`) gives `p ∤ h⁺`, i.e. `IsVandiverPrime p`,
+       and the plus-part bridge `not_dvd_card_plusPart_of_isVandiver` gives `p ∤ |A⁺|`.
+    3. *Recombination.* The eigendecomposition `not_dvd_card_classGroup` turns `p ∤ |A⁺|` and
+       `p ∤ |A⁻|` into `p ∤ h`, i.e. `IsRegularPrime p`, and `flt_regular` closes. -/
 theorem fermatLastTheoremFor_of_bernoulli (q : ℕ) [Fact q.Prime] (hq : 2 < q)
     (hB : ∀ k : Fin ((q - 3) / 2), ¬ (q : ℤ) ∣ (bernoulli (2 * (k.1 + 1))).num) :
     FermatLastTheoremFor q := by
