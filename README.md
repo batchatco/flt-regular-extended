@@ -71,7 +71,7 @@ base provides everything this repo needs:
 ## Part of the flt-vandiver family
 
 Six sibling libraries (clone them as siblings — Lake uses relative paths), release tag
-**`afm-v1`**, GitHub topic
+**`afm-v2`**, GitHub topic
 [`flt-vandiver`](https://github.com/batchatco?tab=repositories&q=topic:flt-vandiver).
 
 | Repo | Role |
@@ -88,7 +88,7 @@ Lean / Mathlib `v4.31.0`.
 
 ## Blueprint & metadata
 
-A dependency-graph blueprint of this library is under [`blueprint/`](blueprint/) (rendered web + PDF published to GitHub Pages once the family is public). Family-level metadata lives in [`formalization.yaml`](https://github.com/batchatco/flt-vandiver/blob/afm-v1/formalization.yaml) in the flt-vandiver repo.
+A dependency-graph blueprint of this library is under [`blueprint/`](blueprint/) (rendered web + PDF published to GitHub Pages once the family is public). Family-level metadata lives in [`formalization.yaml`](https://github.com/batchatco/flt-vandiver/blob/afm-v2/formalization.yaml) in the flt-vandiver repo.
 
 ---
 
