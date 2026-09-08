@@ -26,3 +26,19 @@ globs = [
   "FLTRegularPrimes",
   "Reg.*",
 ]
+
+# Comparator targets. `Challenge.lean` states the theorem with only Mathlib in its import
+# closure and carries a `sorry` by design; `Solution.lean` forwards to the project proof.
+# Both are needed as lake targets because the comparator runs `lake build Challenge` and
+# `lake build Solution` (see config.json). Neither is a default target, so a plain
+# `lake build` never compiles the `sorry`.
+
+[[lean_lib]]
+name = "Challenge"
+srcDir = "."
+globs = ["Challenge"]
+
+[[lean_lib]]
+name = "Solution"
+srcDir = "."
+globs = ["Solution"]
